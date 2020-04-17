@@ -108,6 +108,7 @@ def ReadMetrics( fileName ):
     DataDF = pd.read_csv(fileName, header=0,  
                          delimiter=',',parse_dates=[1], comment='#')
     DataDF = DataDF.set_index('Date')
+    DataDF['Date'] = DataDF.index
     return( DataDF )
 
 
