@@ -121,95 +121,95 @@ if __name__ == '__main__':
     riverName = { "Wildcat": "Wildcat Creek",
                   "Tippe": "Tippecanoe River" }
  
-#importing required datasets
-ReadData('TippecanoeRiver_Discharge_03331500_19431001-20200315.txt') #function from lab 10
-RawTippe, MissingValues = ClipData(DataDF,'1969-10-01','2019-09-30') #function from lab 10
-tippemonth = GetMonthlyFlow(RawTippe) #function from lab 10, this one is needed to process data for figure 3
-tippemonth = GetMonthlyAverageFlow(tippemonth) #function from lab 10, this one is needed to make figure 3
-ReadData('WildcatCreek_Discharge_03335000_19540601-20200315.txt')
-RawWild, MissingValues = ClipData(DataDF, '1969-10-01','2019-09-30')
-wildmonth = GetMonthlyFlow(RawWild)
-wildmonth = GetMonthlyAverageFlow(wildmonth)
-Annual = ReadMetrics('Annual_Metrics.csv') #using the new function I defined
-Month = ReadMetrics('Monthly_Metrics.csv')
+    #importing required datasets
+    ReadData('TippecanoeRiver_Discharge_03331500_19431001-20200315.txt') #function from lab 10
+    RawTippe, MissingValues = ClipData(DataDF,'1969-10-01','2019-09-30') #function from lab 10
+    tippemonth = GetMonthlyFlow(RawTippe) #function from lab 10, this one is needed to process data for figure 3
+    tippemonth = GetMonthlyAverageFlow(tippemonth) #function from lab 10, this one is needed to make figure 3
+    ReadData('WildcatCreek_Discharge_03335000_19540601-20200315.txt')
+    RawWild, MissingValues = ClipData(DataDF, '1969-10-01','2019-09-30')
+    wildmonth = GetMonthlyFlow(RawWild)
+    wildmonth = GetMonthlyAverageFlow(wildmonth)
+    Annual = ReadMetrics('Annual_Metrics.csv') #using the new function I defined
+    Month = ReadMetrics('Monthly_Metrics.csv')
 
-## === Figures === ##
+    ## === Figures === ##
 
-#Daily stream flow for last 5 years
-Tippe5 = RawTippe['2014-10-01':'2019-09-30'] #clip data to the date range we want
-Wild5 = RawWild['2014-10-01':'2019-09-30']
-pt.figure(figsize=(16,10)) #custom size for better resolution
-pt.subplot(211)
-pt.plot(Tippe5.index,Tippe5['Discharge'], 'black',label = 'Tippecanoe')
-pt.ylabel('Discharge (cfs)')
-pt.legend(loc='upper right')
-pt.subplot(212)
-pt.plot(Wild5.index,Wild5['Discharge'], 'red',label = 'Wildcat')
-pt.xlabel('Date')
-pt.ylabel('Discharge (cfs)')
-pt.legend(loc='upper right') #adding legend
-pt.savefig('5yrflow.png')
-pt.close()
+    #Daily stream flow for last 5 years
+    Tippe5 = RawTippe['2014-10-01':'2019-09-30'] #clip data to the date range we want
+    Wild5 = RawWild['2014-10-01':'2019-09-30']
+    pt.figure(figsize=(16,10)) #custom size for better resolution
+    pt.subplot(211)
+    pt.plot(Tippe5.index,Tippe5['Discharge'], 'black',label = 'Tippecanoe')
+    pt.ylabel('Discharge (cfs)')
+    pt.legend(loc='upper right')
+    pt.subplot(212)
+    pt.plot(Wild5.index,Wild5['Discharge'], 'red',label = 'Wildcat')
+    pt.xlabel('Date')
+    pt.ylabel('Discharge (cfs)')
+    pt.legend(loc='upper right') #adding legend
+    pt.savefig('5yrflow.png')
+    pt.close()
 
-#Annual coeff var, TQmean, and R-B index
-fig = pt.figure(figsize=(16,10)) #custom size for better resolution
-pt.subplot(311)
-pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['Coeff Var'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.', label='Tippecanoe') #this uses filtered plotting, so we only plot the tippecanoe values
-pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['Coeff Var'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x',label='Wildcat') #this uses filtered plotting, so we only plot the wildcat values
-pt.legend(loc='upper right')
-ax = pt.gca() #assigning the axis to an object so we can mess with it
-ax.axes.xaxis.set_ticklabels([]) #removing tick labels so they only appear on the BOTTOM subplot, for clarity and cleanliness
-ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5) #adding vertical lines for ease of interpretation
-pt.ylabel('Coeff. Var.')
-pt.text(-1,200,'A)') #add label to subplot
-pt.subplot(312)
-pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['TQmean'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.')
-pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['TQmean'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x')
-ax = pt.gca() #same as before
-ax.axes.xaxis.set_ticklabels([])
-ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5)
-pt.ylabel('TQmean')
-pt.text(-1,0.5,'B)')
-pt.subplot(313)
-pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['R-B Index'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.')
-pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['R-B Index'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x')
-ax = pt.gca() #this time, we will be creating the x-axis
-ax.set_xticklabels(np.arange(1969,2019,1)) #set integer year values
-ax.tick_params(axis='x',labelrotation=40) #rotate them to be visible and legible
-ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5)
-pt.ylabel('R-B Index')
-pt.text(-1,0.32,'C)')
-pt.savefig('annualstats.png')
-pt.close()
+    #Annual coeff var, TQmean, and R-B index
+    fig = pt.figure(figsize=(16,10)) #custom size for better resolution
+    pt.subplot(311)
+    pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['Coeff Var'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.', label='Tippecanoe') #this uses filtered plotting, so we only plot the tippecanoe values
+    pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['Coeff Var'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x',label='Wildcat') #this uses filtered plotting, so we only plot the wildcat values
+    pt.legend(loc='upper right')
+    ax = pt.gca() #assigning the axis to an object so we can mess with it
+    ax.axes.xaxis.set_ticklabels([]) #removing tick labels so they only appear on the BOTTOM subplot, for clarity and cleanliness
+    ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5) #adding vertical lines for ease of interpretation
+    pt.ylabel('Coeff. Var.')
+    pt.text(-1,200,'A)') #add label to subplot
+    pt.subplot(312)
+    pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['TQmean'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.')
+    pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['TQmean'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x')
+    ax = pt.gca() #same as before
+    ax.axes.xaxis.set_ticklabels([])
+    ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5)
+    pt.ylabel('TQmean')
+    pt.text(-1,0.5,'B)')
+    pt.subplot(313)
+    pt.plot(Annual.index[Annual['Station'] == 'Tippe'],Annual['R-B Index'][Annual['Station'] == 'Tippe'], 'black', linestyle='None',marker='.')
+    pt.plot(Annual.index[Annual['Station'] == 'Wildcat'],Annual['R-B Index'][Annual['Station'] == 'Wildcat'], 'red', linestyle='None',marker='x')
+    ax = pt.gca() #this time, we will be creating the x-axis
+    ax.set_xticklabels(np.arange(1969,2019,1)) #set integer year values
+    ax.tick_params(axis='x',labelrotation=40) #rotate them to be visible and legible
+    ax.xaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5)
+    pt.ylabel('R-B Index')
+    pt.text(-1,0.32,'C)')
+    pt.savefig('annualstats.png')
+    pt.close()
 
-#Average annual monthly flow
-fig = pt.figure(figsize=(16,10)) #custom figure size for better resolution
-pt.plot(tippemonth.index,tippemonth['Mean Flow'],'black',linestyle='None',marker='.',label='Tippecanoe')
-pt.plot(wildmonth.index,wildmonth['Mean Flow'],'red', linestyle='None',marker='x',label='Wildcat')
-pt.xticks(np.arange(1,13,1)) #custom x ticks to denote month of year
-pt.legend(loc='upper right')
-pt.xlabel('Month of Year')
-pt.ylabel('Discharge (cfs)')
-pt.savefig('averagemonthlyflow.png')
-pt.close()
-
-#period of annual peak flow events
-wild = Annual[Annual['Station']=='Wildcat']
-tippe = Annual[Annual['Station'] == 'Tippe']
-tpeaksort = tippe.sort_values('Peak Flow', ascending = False) #sorting values based on the peak flow parameter in DESCENDING order
-tpeaksort['Rank'] = np.arange(1,51,1) #assigning the proper rank to each value
-tpeaksort['Exceedence'] = tpeaksort['Rank']/51 #calculating exceedence probability
-wpeaksort = wild.sort_values('Peak Flow', ascending = False)
-wpeaksort['Rank'] = np.arange(1,51,1)
-wpeaksort['Exceedence'] = wpeaksort['Rank']/51
-fig = pt.figure(figsize=(12,10))
-pt.plot(tpeaksort['Exceedence'],tpeaksort['Peak Flow'], 'black', linestyle='None',marker='.', label = 'Tippecanoe') #adding our custom exceedence values to a plot
-pt.plot(wpeaksort['Exceedence'],wpeaksort['Peak Flow'], 'red', linestyle='None',marker='x', label = 'Wildcat')
-ax = pt.gca()
-ax.set_xlim(1,0) #reversing x-axis
-pt.xlabel('Exceedence Probability')
-pt.ylabel('Discharge (cfs)')
-pt.legend(loc='lower right')
-ax.yaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5) #horizontal lines for ease of interpretation
-pt.savefig('exceedence.png')
-pt.close()
+    #Average annual monthly flow
+    fig = pt.figure(figsize=(16,10)) #custom figure size for better resolution
+    pt.plot(tippemonth.index,tippemonth['Mean Flow'],'black',linestyle='None',marker='.',label='Tippecanoe')
+    pt.plot(wildmonth.index,wildmonth['Mean Flow'],'red', linestyle='None',marker='x',label='Wildcat')
+    pt.xticks(np.arange(1,13,1)) #custom x ticks to denote month of year
+    pt.legend(loc='upper right')
+    pt.xlabel('Month of Year')
+    pt.ylabel('Discharge (cfs)')
+    pt.savefig('averagemonthlyflow.png')
+    pt.close()
+    
+    #period of annual peak flow events
+    wild = Annual[Annual['Station']=='Wildcat']
+    tippe = Annual[Annual['Station'] == 'Tippe']
+    tpeaksort = tippe.sort_values('Peak Flow', ascending = False) #sorting values based on the peak flow parameter in DESCENDING order
+    tpeaksort['Rank'] = np.arange(1,51,1) #assigning the proper rank to each value
+    tpeaksort['Exceedence'] = tpeaksort['Rank']/51 #calculating exceedence probability
+    wpeaksort = wild.sort_values('Peak Flow', ascending = False)
+    wpeaksort['Rank'] = np.arange(1,51,1)
+    wpeaksort['Exceedence'] = wpeaksort['Rank']/51
+    fig = pt.figure(figsize=(12,10))
+    pt.plot(tpeaksort['Exceedence'],tpeaksort['Peak Flow'], 'black', linestyle='None',marker='.', label = 'Tippecanoe') #adding our custom exceedence values to a plot
+    pt.plot(wpeaksort['Exceedence'],wpeaksort['Peak Flow'], 'red', linestyle='None',marker='x', label = 'Wildcat')
+    ax = pt.gca()
+    ax.set_xlim(1,0) #reversing x-axis
+    pt.xlabel('Exceedence Probability')
+    pt.ylabel('Discharge (cfs)')
+    pt.legend(loc='lower right')
+    ax.yaxis.grid(which='major',color='gray',linewidth=0.5,linestyle='--',alpha=0.5) #horizontal lines for ease of interpretation
+    pt.savefig('exceedence.png')
+    pt.close()
