@@ -106,7 +106,7 @@ def ReadMetrics( fileName ):
     returns the completed DataFrame."""
     # open and read the file
     DataDF = pd.read_csv(fileName, header=0,  
-                         delimiter=',',parse_dates=[0], comment='#',index_col=0)
+                         delimiter=',',parse_dates=['Date'], comment='#',index_col=['Date'])
     return( DataDF )
 
 
